@@ -1,0 +1,240 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Raw color values, swapped for dark mode. Tailwind reads them via @theme below.
+   ========================================================================== */
+:root {
+  --c-bg: #f6f4ef;
+  --c-bg-alt: #efece5;
+  --c-surface: #ffffff;
+  --c-text: #15130f;
+  --c-muted: #5c574e;
+  --c-border: #e2ddd3;
+  --c-border-strong: #cfc8bb;
+  --c-accent: #c4410e;
+  --c-accent-hover: #a33509;
+  --c-accent-soft: rgba(196, 65, 14, 0.09);
+  --c-on-accent: #ffffff;
+  --c-shadow: 0 1px 2px rgba(21, 19, 15, 0.05), 0 12px 32px -14px rgba(21, 19, 15, 0.22);
+  --grain-opacity: 0.05;
+
+  --nav-h: 68px;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2rem);
+  --section-y: clamp(4rem, 2.5rem + 6vw, 7.5rem);
+  --label-col: 240px;
+  --stagger: 60ms;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-bg: #0e0d0b;
+    --c-bg-alt: #14130f;
+    --c-surface: #1c1a16;
+    --c-text: #eeeae2;
+    --c-muted: #a39e94;
+    --c-border: #2a2722;
+    --c-border-strong: #3a362f;
+    --c-accent: #ff7a45;
+    --c-accent-hover: #ff9466;
+    --c-accent-soft: rgba(255, 122, 69, 0.12);
+    --c-on-accent: #1a0e07;
+    --c-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -14px rgba(0, 0, 0, 0.7);
+    --grain-opacity: 0.07;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --c-bg: #0e0d0b;
+  --c-bg-alt: #14130f;
+  --c-surface: #1c1a16;
+  --c-text: #eeeae2;
+  --c-muted: #a39e94;
+  --c-border: #2a2722;
+  --c-border-strong: #3a362f;
+  --c-accent: #ff7a45;
+  --c-accent-hover: #ff9466;
+  --c-accent-soft: rgba(255, 122, 69, 0.12);
+  --c-on-accent: #1a0e07;
+  --c-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -14px rgba(0, 0, 0, 0.7);
+  --grain-opacity: 0.07;
+  color-scheme: dark;
+}
+
+/* ==========================================================================
+   Tailwind theme: bg-bg, text-muted, border-border-strong, font-display, text-hero ...
+   ========================================================================== */
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-bg-alt: var(--c-bg-alt);
+  --color-surface: var(--c-surface);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-border: var(--c-border);
+  --color-border-strong: var(--c-border-strong);
+  --color-accent: var(--c-accent);
+  --color-accent-hover: var(--c-accent-hover);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-on-accent: var(--c-on-accent);
+  --shadow-card: var(--c-shadow);
+}
+
+@theme {
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+
+  /* Type scale; line-height stays inherited from the element */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: inherit;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: inherit;
+  --text-base: 1rem;
+  --text-base--line-height: inherit;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: inherit;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: inherit;
+  --text-2xl: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
+  --text-2xl--line-height: inherit;
+  --text-hero: clamp(2.75rem, 1.2rem + 5.5vw, 5rem);
+  --text-hero--line-height: inherit;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--nav-h) + 1rem);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+
+  /* Film grain over everything */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+/* ==========================================================================
+   Shared pieces that are used in many places
+   ========================================================================== */
+@utility container-page {
+  width: 100%;
+  max-width: calc(1240px + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@utility icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Text link with an accent underline that grows on hover */
+@utility underline-grow {
+  background: linear-gradient(var(--color-accent), var(--color-accent)) no-repeat left calc(100% - 8px) / 0 1.5px;
+  transition: color 180ms ease, background-size 180ms var(--ease-soft);
+  &:hover { background-size: 100% 1.5px; }
+}
+
+/* ==========================================================================
+   Motion (only when JS is running; skipped for reduced motion)
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 600ms var(--ease-soft), transform 600ms var(--ease-soft);
+    transition-delay: calc(var(--i, 0) * var(--stagger));
+  }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Draw the hero curve on load */
+  .js .hero-curve path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-curve 1600ms var(--ease-soft) 300ms forwards;
+  }
+
+  /* Photo wipes up from the bottom while the image settles from a slight zoom */
+  .js .hero-frame { animation: photo-wipe 1100ms var(--ease-soft) 150ms both; }
+  /* "backwards" so the hover zoom still works once this finishes */
+  .js .hero-photo { animation: photo-settle 1600ms var(--ease-soft) 150ms backwards; }
+}
+
+@keyframes draw-curve { to { stroke-dashoffset: 0; } }
+@keyframes photo-wipe {
+  from { clip-path: inset(100% 0 0 0 round 20px); }
+  to { clip-path: inset(0 0 0 0 round 20px); }
+}
+@keyframes photo-settle {
+  from { transform: scale(1.18); }
+  to { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
